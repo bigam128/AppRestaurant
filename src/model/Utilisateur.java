@@ -5,14 +5,17 @@ public class Utilisateur {
     private String username;
     private String password;
     private int roleid;
-    private String name;
+    private String nom;
+    private String prenom;
+    private String email;
 
-    public Utilisateur(int idUser, String username, String password, int roleid, String name) {
-        this.idUser = idUser;
+    public Utilisateur(String username, String password, int roleid, String nom, String prenom, String email) {
         this.username = username;
         this.password = password;
         this.roleid = roleid;
-        this.name = name;
+        this.nom = nom;
+        this.prenom =  prenom;
+        this.email = email;
     }
 
     public int getIdUser() {
@@ -47,11 +50,27 @@ public class Utilisateur {
         this.roleid = roleid;
     }
 
-    public String getName() {
-        return name;
+    public String getNom() {
+        return nom;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
