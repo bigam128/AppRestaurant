@@ -33,23 +33,23 @@ public class PersoResto extends JFrame {
         dishesPanel = new JPanel();
         dishesPanel.setLayout(new GridLayout(3, 3));
 
-        // Create table for meals
+
         String[] columnNames = {"Meal", "Status"};
         Object[][] data = {
                 {"Spaghetti", "Preparing"},
                 {"Salad", "Waiting"},
                 {"Steak", "Preparing"}
-                // Add more rows as needed
+
         };
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         mealTable = new JTable(model);
 
-        // Add buttons to top of frame
+
         JPanel topPanel = new JPanel();
         topPanel.add(profileButton);
         topPanel.add(settingsButton);
 
-        // Add button for managing users
+
         manageUsersButton = new JButton("Manage Users");
         manageUsersButton.addActionListener(new ActionListener() {
             @Override
@@ -66,7 +66,7 @@ public class PersoResto extends JFrame {
         topPanel.add(manageUsersButton);
 
 
-        // Add components to content pane
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(topPanel, BorderLayout.NORTH);
