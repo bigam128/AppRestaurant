@@ -48,7 +48,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         if (roleId > 0) {
             switch (roleId) {
                 case 1: // Etudiant
-                    EtudiantFrame etudiantPage = new EtudiantFrame();
+                    ClientFrame etudiantPage = new ClientFrame();
                      etudiantPage.setVisible(true);
                     JLabel etudiantLabel = new JLabel("Welcome etudiant: " + userValue);
                     etudiantPage.getContentPane().add(etudiantLabel);

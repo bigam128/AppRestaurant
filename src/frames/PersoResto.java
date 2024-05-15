@@ -18,21 +18,22 @@ public class PersoResto extends JFrame {
     private JTable mealTable;
     private JButton manageUsersButton;  // Button for managing user
 
+
     PersoResto() {
         setDefaultCloseOperation(javax.swing.
                 WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Welcome personnel");
         setSize(600, 400);
 
-        // Create buttons for profile and settings
+
         profileButton = new JButton("Profile");
         settingsButton = new JButton("Settings");
 
-        // Create panel for dishes
-        dishesPanel = new JPanel();
-        dishesPanel.setLayout(new GridLayout(3, 3)); // Example grid layout, adjust as needed
 
-        // Create table for meals in preparation
+        dishesPanel = new JPanel();
+        dishesPanel.setLayout(new GridLayout(3, 3));
+
+        // Create table for meals
         String[] columnNames = {"Meal", "Status"};
         Object[][] data = {
                 {"Spaghetti", "Preparing"},
@@ -53,9 +54,13 @@ public class PersoResto extends JFrame {
         manageUsersButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open UserManagementFrame when button is clicked
-                ManagementUtilisateur userManagementFrame = new ManagementUtilisateur();
-                userManagementFrame.setVisible(true);
+                getContentPane().removeAll(); // Remove le contenu de cette frame
+                getContentPane().revalidate();
+                getContentPane().repaint();
+
+                ManagementUtilisateur managementUtilisateur = new ManagementUtilisateur();
+                getContentPane().add(managementUtilisateur.getContentPane()); // Ajouter le contenu de ManagementUtilisateur  frame
+                pack();
             }
         });
         topPanel.add(manageUsersButton);
@@ -68,6 +73,10 @@ public class PersoResto extends JFrame {
         contentPane.add(new JScrollPane(mealTable), BorderLayout.WEST);
         contentPane.add(dishesPanel, BorderLayout.CENTER);
     }
+
+
+
+
 
 
     public static void main(String[] args) {

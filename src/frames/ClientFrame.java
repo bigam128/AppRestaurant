@@ -2,10 +2,10 @@ package frames;
 
 import javax.swing.*;
 
-public class EtudiantFrame extends JFrame {
+public class ClientFrame extends JFrame {
 
         //constructor
-        EtudiantFrame()
+        ClientFrame()
         {
             setDefaultCloseOperation(javax.swing.
                     WindowConstants.DISPOSE_ON_CLOSE);
