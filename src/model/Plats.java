@@ -1,14 +1,16 @@
 package model;
 
-public class Menu {
+public class Plats {
     public int idItem;
     public String itemName;
-    public int itemPrice;
+    public double itemPrice;
+    public String image_url;
 
-    public Menu(int idItem, String itemName, int itemPrice) {
+    public Plats(int idItem, String itemName, int itemPrice, String image_url) {
         this.idItem = idItem;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
+        this.image_url = image_url;
     }
 
     public int getIdItem() {
@@ -27,11 +29,19 @@ public class Menu {
         this.itemName = itemName;
     }
 
-    public int getItemPrice() {
+    public double getItemPrice() {
         return itemPrice;
     }
 
     public void setItemPrice(int itemPrice) {
         this.itemPrice = itemPrice;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }

@@ -66,12 +66,12 @@ public class LoginFrame extends JFrame implements ActionListener {
                     persoResto.getContentPane().add(persLabel);
                     break;
                 default:
-                    JOptionPane.showMessageDialog(this, "Invalid role", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "role  invalid", "Login Error", JOptionPane.ERROR_MESSAGE);
                     break;
             }
         } else {
 
-            JOptionPane.showMessageDialog(this, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "username or password incorrect", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -11,24 +11,17 @@ public class UserDAO {
     private static final String INSERT_USER_SQL = "INSERT INTO Utilisateur (username, password, role_id, nom, prenom, email) VALUES (?, ?, ?, ?,?,?)";
 
     public static int addUser(Utilisateur user) {
-
         int autodId = 0;
-
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
-
-
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setInt(3, user.getRoleid());
             preparedStatement.setString(4, user.getNom());
             preparedStatement.setString(5, user.getPrenom());
             preparedStatement.setString(6, user.getEmail());
-
-
             preparedStatement.executeUpdate();
             ResultSet rs = preparedStatement.getGeneratedKeys();
-
             if (rs.next()) {
                 autodId = rs.getInt(1);
             }
@@ -36,11 +29,8 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return autodId;
     }
-
-
     public static void deleteUserByUsername(String username) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
              PreparedStatement delete = connection.prepareStatement("DELETE FROM Utilisateur WHERE username = ?")) {
@@ -107,8 +97,8 @@ public class UserDAO {
 
         // Update user in the database
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "")) {
-            String updateSQL = "UPDATE Utilisateur SET username = ?, password = ?, role_id = ?, nom = ?, prenom = ?, email = ? WHERE username = ?";
-            PreparedStatement modifier = connection.prepareStatement(updateSQL);
+            String update = "UPDATE Utilisateur SET username = ?, password = ?, role_id = ?, nom = ?, prenom = ?, email = ? WHERE username = ?";
+            PreparedStatement modifier = connection.prepareStatement(update);
 
             modifier.setString(1, newUsername);
             modifier.setString(2, newPassword);
@@ -120,13 +110,13 @@ public class UserDAO {
 
             int rowsUpdated = modifier.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("User information updated successfully!");
+                System.out.println("ok");
             } else {
-                System.out.println("User with username '" + username + "' not found.");
+                System.out.println("not found");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.err.println("Error updating user information.");
+            System.err.println("error");
         }
     }
 
