@@ -1,7 +1,10 @@
 package frames;
 
 import DAO.PlatsDAO;
+import DAO.PanierDAO;
 import model.Plats;
+import model.Commande;
+import model.Utilisateur;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,91 +15,118 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainMenuFrame extends JFrame {
     private JPanel dishPanel;
-    private List<Plats> cart = new ArrayList<>();
+    private PanierDAO panierDAO;
+    private int userId;
 
-    public MainMenuFrame() throws SQLException {
+    public MainMenuFrame(int userId) throws SQLException {
+        this.userId = userId;
+        this.panierDAO = new PanierDAO();
+
         setTitle("Main Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-
+        setSize(1000, 800);
         dishPanel = new JPanel(new GridLayout(0, 2));
         afficherPlats();
 
+        JScrollPane scrollPane = new JScrollPane(dishPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        JPanel cartPanel = new JPanel();
-        cartPanel.setLayout(new BoxLayout(cartPanel, BoxLayout.Y_AXIS));
-        JLabel cartLabel = new JLabel("Panier:");
-        cartPanel.add(cartLabel);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
+        // Add cart button
+        JButton cartButton = new JButton("View Cart");
+        cartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewCart();
+            }
+        });
 
-        JButton viewCartButton = new JButton("Regarder Panier");
-        viewCartButton.addActionListener(e -> regarderPanier());
-        cartPanel.add(viewCartButton);
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(cartButton, BorderLayout.EAST);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
 
-
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(new JScrollPane(dishPanel), BorderLayout.CENTER);
-        getContentPane().add(cartPanel, BorderLayout.EAST);
-
+        add(mainPanel);
         setLocationRelativeTo(null);
     }
 
     private void afficherPlats() throws SQLException {
-        PlatsDAO plat = new PlatsDAO();
+        PlatsDAO platDAO = new PlatsDAO();
         try {
-            List<Plats> dishes = plat.getPlats();
+            List<Plats> dishes = platDAO.getPlats();
             for (Plats dish : dishes) {
                 JPanel panel = new JPanel(new BorderLayout());
-                JLabel nameLabel = new JLabel(dish.getItemName());
-                JLabel priceLabel = new JLabel(String.format("$%.2f", dish.getItemPrice()));
+                JLabel nameLabel = new JLabel(dish.getItemName(), SwingConstants.CENTER);
+                JLabel priceLabel = new JLabel(String.format("$%.2f", dish.getItemPrice()), SwingConstants.CENTER);
                 JLabel imageLabel = new JLabel();
+
                 try {
                     BufferedImage img = ImageIO.read(new File(dish.getImage_url()));
                     ImageIcon icon = new ImageIcon(img.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
                     imageLabel.setIcon(icon);
                 } catch (IOException e) {
-                    imageLabel.setText("pas de photo");
+                    imageLabel.setText("Image not found");
                 }
 
-                JButton addButton = new JButton("Ajouter Panier");
-                addButton.addActionListener(e -> addPanier(dish));
+                JButton addButton = new JButton("Add to Cart");
+                addButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        addToCart(dish);
+                    }
+                });
 
                 panel.add(nameLabel, BorderLayout.NORTH);
                 panel.add(imageLabel, BorderLayout.CENTER);
                 panel.add(priceLabel, BorderLayout.SOUTH);
-                panel.add(addButton, BorderLayout.EAST);
+                panel.add(addButton, BorderLayout.SOUTH);
                 dishPanel.add(panel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error loading dishes: " + e.getMessage());
         }
     }
 
-    private void addPanier(Plats plat) {
-        cart.add(plat);
-        JOptionPane.showMessageDialog(this, plat.getItemName() + " ajouter !");
+    private void addToCart(Plats plat) {
+        String quantityStr = JOptionPane.showInputDialog(this, "Enter quantity:", "Add to Cart", JOptionPane.PLAIN_MESSAGE);
+        if (quantityStr != null) {
+            try {
+                int quantite = Integer.parseInt(quantityStr);
+                System.out.println("panier id : " +userId);
+                panierDAO.addPlat(plat, quantite,userId);
+                JOptionPane.showMessageDialog(this, "Added to cart!");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid quantity entered.");
+            }
+        }
     }
 
-    private void regarderPanier() {
-        StringBuilder contenu = new StringBuilder("Contenu:\n");
-        for (Plats dish : cart) {
-            contenu.append(dish.getItemName()).append(" - ").append(dish.getItemPrice()).append("\n");
+    private void viewCart() {
+        double totalPrice = panierDAO.getTotalPrice();
+        int confirmation = JOptionPane.showConfirmDialog(this, "Total Price: $" + totalPrice + "\nDo you want to validate the cart?", "Cart", JOptionPane.YES_NO_OPTION);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            List<Commande> commandes = panierDAO.validate(userId);
+
+            JOptionPane.showMessageDialog(this, "Order placed successfully! Total: $" + totalPrice);
+
         }
-        JOptionPane.showMessageDialog(this, contenu.toString());
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                new MainMenuFrame().setVisible(true);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new MainMenuFrame(1).setVisible(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

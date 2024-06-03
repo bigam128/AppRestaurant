@@ -1,7 +1,7 @@
 package frames;
 
-import DAO.UserDAO;
-import model.Utilisateur;
+import DAO.CommandeDAO;
+import model.Commande;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.List;
 
 public class PersoResto extends JFrame {
 
@@ -34,15 +35,7 @@ public class PersoResto extends JFrame {
         dishesPanel.setLayout(new GridLayout(3, 3));
 
 
-        String[] columnNames = {"Meal", "Status"};
-        Object[][] data = {
-                {"Spaghetti", "Preparing"},
-                {"Salad", "Waiting"},
-                {"Steak", "Preparing"}
-
-        };
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        mealTable = new JTable(model);
+        affichercommande();
 
 
         JPanel topPanel = new JPanel();
@@ -74,8 +67,22 @@ public class PersoResto extends JFrame {
         contentPane.add(dishesPanel, BorderLayout.CENTER);
     }
 
+    private void affichercommande(){
 
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Command ID");
+        model.addColumn("User ID");
+        model.addColumn("Total Price");
+        model.addColumn("Status");
 
+        mealTable = new JTable(model);
+        List<Commande> aff = CommandeDAO.getAllCommandes();
+        System.out.println(aff);
+        for (Commande commande : aff) {
+            model.addRow(new Object[]{commande.getIdCommande(), commande.getUserId(), commande.getTotalPrix(), commande.getStatus()});
+        }
+
+    }
 
 
 

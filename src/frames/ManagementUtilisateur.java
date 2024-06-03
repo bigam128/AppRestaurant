@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.List;
 
 public class ManagementUtilisateur extends JFrame {
 
@@ -108,30 +109,14 @@ public class ManagementUtilisateur extends JFrame {
         model.addColumn("Prenom");
         model.addColumn("Email");
 
-
-        //
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM Utilisateur")) {
-
-            while (resultSet.next()) {
-                int iduser = resultSet.getInt("idUtilisateur");
-                String username = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                int roleId = resultSet.getInt("role_id");
-                String nom = resultSet.getString("nom");
-                String prenom = resultSet.getString("prenom");
-                String email = resultSet.getString("email");
-
-
-
-                model.addRow(new Object[]{iduser,username, password, roleId, nom,prenom,email});
-            }
-
-            userTable.setModel(model);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        userTable = new JTable(model);
+        List<Utilisateur> utt = UserDAO.afficherut();
+        System.out.println(utt);
+        for (Utilisateur utilisateur : utt){
+            model.addRow(new Object[]{utilisateur.getIdUser(),utilisateur.getUsername(),utilisateur.getPassword(),utilisateur.getRoleid(),utilisateur.getNom(),utilisateur.getPrenom(),utilisateur.getEmail()});
         }
+
+
     }
 
 

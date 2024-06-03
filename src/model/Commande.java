@@ -1,27 +1,30 @@
 package model;
 
+import java.util.List;
+
 public class Commande {
     private int idCommande;
     private int userId;
-    private int itemId;
-    public int quantity;
-    public Status status; // Enum variable
+
+    private Status status;// Enum variable
+
+    private double totalPrix;
+    private List<CommandeContenu> ps;
 
 
     // Enum definition
     public enum Status {
-        PENDING,
-        IN_PROGRESS,
-        READY,
-        DELIVERED
+        ATTENTE,
+        EN_COURS_DE_PREPARATION,
+        PRETE
     }
 
-    public Commande(int idCommande, int userId, int itemId, int quantity, Status status) {
+    public Commande(int idCommande, int userId, Status status,double totalPrix) {
         this.idCommande = idCommande;
         this.userId = userId;
-        this.itemId = itemId;
-        this.quantity = quantity;
+
         this.status = status;
+        this.totalPrix = totalPrix;
     }
 
     public int getIdCommande() {
@@ -40,27 +43,38 @@ public class Commande {
         this.userId = userId;
     }
 
-    public int getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public Status getStatus() {
         return status;
     }
 
+    public Status setStatus() {
+        return status;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public double getTotalPrix() {
+        return totalPrix;
+    }
+
+    public List<CommandeContenu> getPs() {
+        return ps;
+    }
+
+    public void setPs(List<CommandeContenu> ps) {
+        this.ps = ps;
+    }
+
+    @Override
+    public String toString() {
+        return "Commande{" +
+                "id=" + idCommande +
+                ", userId=" + userId +
+                ", status='" + status + '\'' +
+                ", totalPrice=" + totalPrix +
+                '}';
     }
 }

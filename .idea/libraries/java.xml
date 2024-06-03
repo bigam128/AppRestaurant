@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="java">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../APP_JAVA_GESTION_DE_VENTES/lib/mysql-connector-j-8.2.0/src/legacy/java" />
+    </SOURCES>
+  </library>
+</component>

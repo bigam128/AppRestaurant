@@ -1,5 +1,8 @@
 package frames;
 
+import DAO.UserDAO;
+import model.Utilisateur;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,12 +47,21 @@ public class LoginFrame extends JFrame implements ActionListener {
         String userValue = textField1.getText(); // Get username
         String passValue = textField2.getText(); // Get password
 
-        int roleId = checkCredentials(userValue, passValue);
-        if (roleId > 0) {
+        Utilisateur ut = UserDAO.checkCredentials(userValue, passValue);
+        if (ut != null) {
+            int  userId = ut.getIdUser();
+            int roleId = ut.getRoleid();
+
             switch (roleId) {
                 case 1: // Etudiant
-                    ClientFrame etudiantPage = new ClientFrame();
-                     etudiantPage.setVisible(true);
+                    MainMenuFrame etudiantPage = null;
+                    try {
+                        etudiantPage = new MainMenuFrame(userId);
+                        System.out.println("id : "+ userId);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    etudiantPage.setVisible(true);
                     JLabel etudiantLabel = new JLabel("Welcome etudiant: " + userValue);
                     etudiantPage.getContentPane().add(etudiantLabel);
                     break;
@@ -75,34 +87,6 @@ public class LoginFrame extends JFrame implements ActionListener {
         }
     }
 
-    private int checkCredentials(String username, String password) {
-
-        String databaseUrl = "jdbc:mysql://localhost:3306/AppRestaurant";
-        String dbUser = "root";
-        String dbPassword = "";
-
-        String query = "SELECT role_id FROM Utilisateur WHERE username = ? AND password = ?";
-
-        try (Connection connection = DriverManager.getConnection(databaseUrl, dbUser, dbPassword);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                return resultSet.getInt("role_id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-
-        return -1;
-    }
 
     public static void main(String[] args) {
         LoginFrame frame = new LoginFrame();

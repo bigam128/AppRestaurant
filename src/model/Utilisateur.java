@@ -1,15 +1,16 @@
 package model;
 
 public class Utilisateur {
-    private int idUser;
+    private    int idUser;
     private String username;
     private String password;
-    private int roleid;
+    private    int roleid;
     private String nom;
     private String prenom;
     private String email;
 
-    public Utilisateur(String username, String password, int roleid, String nom, String prenom, String email) {
+    public Utilisateur(int iduser, String username, String password, int roleid, String nom, String prenom, String email) {
+        this.idUser = iduser;
         this.username = username;
         this.password = password;
         this.roleid = roleid;
@@ -18,7 +19,21 @@ public class Utilisateur {
         this.email = email;
     }
 
-    public int getIdUser() {
+    public Utilisateur(int idUser, int roleid) {
+        this.idUser = idUser;
+        this.roleid = roleid;
+    }
+
+    public Utilisateur(String username, String password, int roleid, String nom, String prenom, String email) {
+        this.username = username;
+        this.password = password;
+        this.roleid = roleid;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+    }
+
+    public  int getIdUser() {
         return idUser;
     }
 
@@ -42,7 +57,7 @@ public class Utilisateur {
         this.password = password;
     }
 
-    public int getRoleid() {
+    public  int getRoleid() {
         return roleid;
     }
 
@@ -72,5 +87,20 @@ public class Utilisateur {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Utilisateur{" +
+                ", id='" + idUser + '\'' +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + roleid + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

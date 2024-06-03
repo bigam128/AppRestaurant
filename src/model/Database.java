@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    public static void main(String[] args) {
+    public boolean connection() {
         Connection connection = null;
         try {
 
@@ -34,5 +34,7 @@ public class Database {
                 }
             }
         }
+
+        return false;
     }
 }
