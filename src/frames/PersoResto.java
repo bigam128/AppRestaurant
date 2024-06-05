@@ -47,7 +47,7 @@ public class PersoResto extends JFrame {
                     if (selectedRow != -1) {
                         int commandeId = (int) TablePlat.getValueAt(selectedRow, 0); // status is in the 3eme column
                         System.out.println(commandeId); //for testing
-                        String[] statuses = {"ATTENTE", "EN_COURS_DE_PREPARATION", "PRETE"};
+                        String[] statuses = {"ATTENTE", "EN_COURS_DE_PREPARATION", "PRETE","LIVREE"};
 
 
                         String newStatus = (String) JOptionPane.showInputDialog(
@@ -62,7 +62,7 @@ public class PersoResto extends JFrame {
                         if (newStatus != null) {
                             CommandeDAO.updateCommandeStatus(commandeId, newStatus);
 
-                            JOptionPane.showMessageDialog(null, "Status updated successfully.");
+                            JOptionPane.showMessageDialog(null, "Status modifier.");
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a row to change the status.");
@@ -91,7 +91,11 @@ public class PersoResto extends JFrame {
                 System.out.println(selectedRow);
                 if (selectedRow != -1) {
                     int idcommande = (int) TablePlat.getValueAt(selectedRow, 0);
-                    detailsCommand(idcommande);
+                    try {
+                        detailsCommand(idcommande);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select a commande to see details.");
                 }
@@ -176,16 +180,10 @@ public class PersoResto extends JFrame {
         }
 
     }
-    private void detailsCommand(int idCommande){
-
-
-
-        setTitle("Commande Details");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
-
-
-
+    private void detailsCommand(int idCommande) throws SQLException {
+        JFrame ordersFrame = new JFrame("Command Details");
+        ordersFrame.setSize(600, 400);
+        ordersFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         List<CommandeContenu> commandes = null;
         try {
@@ -196,44 +194,32 @@ public class PersoResto extends JFrame {
             return;
         }
 
-
         DefaultTableModel tableModel = new DefaultTableModel();
-        tableModel.addColumn("ID Commande");
-        tableModel.addColumn("ID Plat");
-        tableModel.addColumn("Quantite");
-
+        tableModel.addColumn("Order ID");
+        tableModel.addColumn("Plat ID");
+        tableModel.addColumn("Quantity");
 
         if (commandes != null) {
             for (CommandeContenu commande : commandes) {
-                tableModel.addRow(new Object[]{commande.getIdCommande(), commande.getIdPlat(), CommandeContenu.getQuantity()});
+                tableModel.addRow(new Object[]{commande.getIdCommande(), commande.getIdPlat(), commande.getQuantity()});
             }
         }
 
-        JButton backButton  = new JButton("Back");
+        JTable ordersTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(ordersTable);
+        ordersFrame.add(scrollPane, BorderLayout.CENTER);
+
+        JButton backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed (ActionEvent e){
-                PersoResto m = new PersoResto();
-                getContentPane().removeAll();
-                getContentPane().revalidate();
-                getContentPane().repaint();
-                getContentPane().add(m.getContentPane());
-                pack();
+            public void actionPerformed(ActionEvent e) {
+                ordersFrame.dispose();
             }
-
         });
+        ordersFrame.add(backButton, BorderLayout.SOUTH);
 
-
-        commandeTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(commandeTable);
-
-
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-        contentPane.add(scrollPane, BorderLayout.CENTER);
-        contentPane.add(backButton, BorderLayout.SOUTH);
-
-        setVisible(true);
+        ordersFrame.setLocationRelativeTo(this);
+        ordersFrame.setVisible(true);
     }
 
 

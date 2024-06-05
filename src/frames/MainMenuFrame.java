@@ -123,7 +123,7 @@ public class MainMenuFrame extends JFrame {
 
                 try {
                     BufferedImage img = ImageIO.read(new File(dish.getImage_url()));
-                    ImageIcon icon = new ImageIcon(img.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+                    ImageIcon icon = new ImageIcon(img.getScaledInstance(500, 400, Image.SCALE_SMOOTH));
                     imageLabel.setIcon(icon);
                 } catch (IOException e) {
                     imageLabel.setText("Image not found");
@@ -152,15 +152,14 @@ public class MainMenuFrame extends JFrame {
 
 
                 JPanel gridPanel = new JPanel(new GridLayout(1, 2));
+                gridPanel.add(priceLabel);
                 gridPanel.add(addButton);
-                gridPanel.add(ModifierButton);
-
-                JPanel gridPanel2 = new JPanel(new GridLayout(1, 2));
-                gridPanel2.add(nameLabel);
-                gridPanel2.add(priceLabel);
 
 
-                panel.add(gridPanel2, BorderLayout.NORTH);
+
+
+
+                panel.add(nameLabel, BorderLayout.NORTH);
                 panel.add(imageLabel, BorderLayout.CENTER);
 
                 panel.add(gridPanel, BorderLayout.SOUTH);

@@ -16,7 +16,8 @@ public class Commande {
     public enum Status {
         ATTENTE,
         EN_COURS_DE_PREPARATION,
-        PRETE
+        PRETE,
+        LIVREE
     }
 
     public Commande(int idCommande, int userId, Status status,double totalPrix) {
