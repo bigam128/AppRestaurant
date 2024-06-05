@@ -30,6 +30,12 @@ public class Panier {
         this.totalPrix = totalPrix;
     }
 
+    public Panier(int idPlat, int quantity, double totalPrix) {
+        this.idPlat = idPlat;
+        this.quantity = quantity;
+        this.totalPrix = totalPrix;
+    }
+
     // Getters and Setters
     public int getIdPanier() {
         return idPanier;
@@ -69,5 +75,14 @@ public class Panier {
 
     public void setTotalPrix(double totalPrix) {
         this.totalPrix = totalPrix;
+    }
+
+    @Override
+    public String toString() {
+        return "Panier{" +
+                "idPlat=" + idPlat +
+                ", quantity=" + quantity +
+                ", totalPrix=" + totalPrix +
+                '}';
     }
 }

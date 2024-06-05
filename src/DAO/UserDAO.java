@@ -187,6 +187,29 @@ public class UserDAO  {
         return null;
     }
 
+    public static Utilisateur getUserById(int userId) throws SQLException {
+        String query = "SELECT * FROM Utilisateur WHERE idUtilisateur = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Utilisateur(
+                    rs.getInt("idUtilisateur"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("role_id"),
+                    rs.getString("nom"),
+                    rs.getString("prenom"),
+                    rs.getString("email")
+
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
 
 }
 

@@ -22,7 +22,6 @@ public class Commande {
     public Commande(int idCommande, int userId, Status status,double totalPrix) {
         this.idCommande = idCommande;
         this.userId = userId;
-
         this.status = status;
         this.totalPrix = totalPrix;
     }

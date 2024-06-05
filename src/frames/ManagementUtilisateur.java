@@ -17,6 +17,7 @@ public class ManagementUtilisateur extends JFrame {
     private JButton addButton;
     private JButton deleteButton;
     private JButton backButton;
+
     private JButton updateButton;
 
     public ManagementUtilisateur() {
@@ -24,65 +25,60 @@ public class ManagementUtilisateur extends JFrame {
         setTitle("User Management");
         setSize(600, 400);
 
-        // Create table
         userTable = new JTable();
         remplissageTableau();
 
-        // Create buttons
         addButton = new JButton("Add User");
         deleteButton = new JButton("Delete User");
-        backButton = new JButton("back");
+        backButton = new JButton("Back");
         updateButton = new JButton("Modify");
 
-        // Adding action listeners to buttons
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AjouterUtilisateur();
+        addButton.addActionListener(e -> AjouterUtilisateur());
+
+        deleteButton.addActionListener(e -> {
+            int selectedRow = userTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String username = (String) userTable.getValueAt(selectedRow, 1);
+                int confirmDialog = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                if (confirmDialog == JOptionPane.YES_OPTION) {
+                    UserDAO.deleteUserByUsername(username);
+                    remplissageTableau();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a user to delete.");
             }
         });
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) { //on clique sur
-                int selectedRow = userTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    String username = (String) userTable.getValueAt(selectedRow, 1); // username is in the deuxieme column
-                    System.out.println(username); //for testing
-                    int confirmDialog = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-                    if (confirmDialog == JOptionPane.YES_OPTION) {
-                        UserDAO.deleteUserByUsername(username);
-                        remplissageTableau();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a user to delete.");
+        updateButton.addActionListener(e -> {
+            int selectedRow = userTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String username = (String) userTable.getValueAt(selectedRow, 1);
+                int confirmDialog = JOptionPane.showConfirmDialog(null, "Are you sure you want to modify this user?", "Confirm Modification", JOptionPane.YES_NO_OPTION);
+                if (confirmDialog == JOptionPane.YES_OPTION) {
+                    modifierUtilisateur();
+                    remplissageTableau();
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a user to modify.");
             }
         });
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed (ActionEvent e){
-                    PersoResto m = new PersoResto();
-                    getContentPane().removeAll();
-                    getContentPane().revalidate();
-                    getContentPane().repaint();
-                    getContentPane().add(m.getContentPane());
-                    pack();
-                }
-
-        });
-
-        updateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modifierUtilisateur();
+                PersoResto m = new PersoResto();
+                getContentPane().removeAll();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+                getContentPane().add(m.getContentPane());
+                pack();
             }
 
         });
 
 
 
-        // ajouter a la pane le contenu
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(new JScrollPane(userTable), BorderLayout.CENTER);
@@ -93,12 +89,8 @@ public class ManagementUtilisateur extends JFrame {
         buttonPanel.add(backButton);
         buttonPanel.add(updateButton);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
-
-        remplissageTableau();
     }
 
-
-    //cette methode a pour role de rafraichir le contenu du tableau en cas d'ajout ou de supression
     private void remplissageTableau() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("ID");
@@ -109,15 +101,13 @@ public class ManagementUtilisateur extends JFrame {
         model.addColumn("Prenom");
         model.addColumn("Email");
 
-        userTable = new JTable(model);
         List<Utilisateur> utt = UserDAO.afficherut();
-        System.out.println(utt);
         for (Utilisateur utilisateur : utt){
             model.addRow(new Object[]{utilisateur.getIdUser(),utilisateur.getUsername(),utilisateur.getPassword(),utilisateur.getRoleid(),utilisateur.getNom(),utilisateur.getPrenom(),utilisateur.getEmail()});
         }
-
-
+        userTable.setModel(model);
     }
+
 
 
     private void AjouterUtilisateur() {

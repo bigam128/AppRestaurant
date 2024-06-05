@@ -14,10 +14,10 @@ public class PanierDAO {
             String sql = "INSERT INTO Panier (plat_id, quantity, id_User, prix_total) VALUES (?, ?, ?, ?)";
 
             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, plat.getIdItem());
+            statement.setInt(1, plat.getIdplat());
             statement.setInt(2, quantity);
             statement.setInt(3, userId);
-            statement.setDouble(4, plat.getItemPrice());
+            statement.setDouble(4, plat.getPrixPlat());
             statement.executeUpdate();
             ResultSet rss = statement.getGeneratedKeys();
             if (rss.next()) {
@@ -54,12 +54,35 @@ public class PanierDAO {
         return total;
     }
 
+    public List<Panier> getPanierByUserId(int userId) {
+        List<Panier> panierItems = new ArrayList<>();
+        String query = "SELECT P.idPlat, P.NomPlat, P.prix, C.quantity FROM Panier C JOIN Plats P ON C.plat_id = P.idPlat WHERE C.id_User = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int platId = resultSet.getInt("idPlat");
+                int quantity = resultSet.getInt("quantity");
+                double prix = resultSet.getDouble("prix");
+                Panier panierItem = new Panier(platId,quantity,prix);
+                System.out.println(panierItem);
+                panierItems.add(panierItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return panierItems;
+    }
+
+
     public List<Commande> validate(int userId) {
         List<Commande> commandes = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "")) {
             connection.setAutoCommit(false);
 
-            // Create a new order
+
             String sqlCommande = "INSERT INTO Commandes (idUser, status, totalPrix) VALUES (?, ?, ?)";
             PreparedStatement statementCommande = connection.prepareStatement(sqlCommande, PreparedStatement.RETURN_GENERATED_KEYS);
             statementCommande.setInt(1, userId);
@@ -132,4 +155,18 @@ public class PanierDAO {
             System.err.println("Error");
         }
     }
+    public void modifierPanier(int userId, int platId, int newQuantity) {
+        String query = "UPDATE Panier SET plat_id = ?, quantity = ? WHERE id_User = ? AND plat_id = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/AppRestaurant", "root", "");
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, newQuantity);
+            statement.setInt(2, userId);
+            statement.setInt(3, platId);
+            statement.setDouble(4,getTotalPrice());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

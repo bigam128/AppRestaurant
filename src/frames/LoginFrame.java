@@ -19,6 +19,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     JLabel userLabel, passLabel;
     final JTextField textField1, textField2;
 
+
     // Constructor
     LoginFrame() {
         userLabel = new JLabel("Username");
@@ -42,8 +43,10 @@ public class LoginFrame extends JFrame implements ActionListener {
         setTitle("Login Frame");
     }
 
+
     @Override
     public void actionPerformed(ActionEvent ae) {
+
         String userValue = textField1.getText(); // Get username
         String passValue = textField2.getText(); // Get password
 
@@ -56,6 +59,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 case 1: // Etudiant
                     MainMenuFrame etudiantPage = null;
                     try {
+
                         etudiantPage = new MainMenuFrame(userId);
                         System.out.println("id : "+ userId);
                     } catch (SQLException e) {

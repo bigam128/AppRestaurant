@@ -1,40 +1,50 @@
 package model;
 
 public class Plats {
-    public int idItem;
-    public String itemName;
-    public double itemPrice;
+    public int idplat;
+    public String nomPlat;
+    public double prixPlat;
+    public String  description;
+
     public String image_url;
 
-    public Plats(int idItem, String itemName, int itemPrice, String image_url) {
-        this.idItem = idItem;
-        this.itemName = itemName;
-        this.itemPrice = itemPrice;
+    public Plats(int idplat, String nomPlat, int prixPlat, String image_url) {
+        this.idplat = idplat;
+        this.nomPlat = nomPlat;
+        this.prixPlat = prixPlat;
         this.image_url = image_url;
     }
 
-    public int getIdItem() {
-        return idItem;
+    public Plats(int idplat, String nomPlat, double prixPlat, String description, String imageUrl) {
+        this.idplat = idplat;
+        this.nomPlat = nomPlat;
+        this.prixPlat = prixPlat;
+        this.description = description;
+        this.image_url = imageUrl;
     }
 
-    public void setIdItem(int idItem) {
-        this.idItem = idItem;
+    public int getIdplat() {
+        return idplat;
     }
 
-    public String getItemName() {
-        return itemName;
+    public void setIdplat(int idplat) {
+        this.idplat = idplat;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public String getNomPlat() {
+        return nomPlat;
     }
 
-    public double getItemPrice() {
-        return itemPrice;
+    public void setNomPlat(String nomPlat) {
+        this.nomPlat = nomPlat;
     }
 
-    public void setItemPrice(int itemPrice) {
-        this.itemPrice = itemPrice;
+    public double getPrixPlat() {
+        return prixPlat;
+    }
+
+    public void setPrixPlat(int prixPlat) {
+        this.prixPlat = prixPlat;
     }
 
     public String getImage_url() {
@@ -43,5 +53,28 @@ public class Plats {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public void addIngredient(Ingredient ingredient) {
+
+    }
+
+    public void setPrixPlat(double prixPlat) {
+        this.prixPlat = prixPlat;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Plats{" +
+                "description='" + description + '\'' +
+                '}';
     }
 }
